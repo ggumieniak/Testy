@@ -18,7 +18,6 @@ class ArrayExamplesTest extends ArrayExamples {
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		 // metoda zostala uzyta tylko raz, aby sprawdzic limity		
-		System.out.println(Integer.MAX_VALUE);
 		System.out.println("Konfigurowanie testu");
 		int i = 1;
 		try {
@@ -106,7 +105,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		case "PosortowanyWspolne.txt":
 		case "PosortowanyMalejacoWspolne.txt":
 			return -2147010079;
-		case "jedenElement.txt":
+		case "JedenElement.txt":
 			return -2147383980;
 		case "Grzegorz.txt":
 		case "PosortowanyGrzegorz.txt":
@@ -122,22 +121,33 @@ class ArrayExamplesTest extends ArrayExamples {
 		case "Marcin.txt":
 		case "PosortowanyMarcin.txt":
 		case "PosortowanyMalejacoMarcin.txt":
-			return "Marcin.txt";
+			return "PosortowanyMarcin.txt";
 		case "Wspolne.txt":
 		case "PosortowanyWspolne.txt":
 		case "PosortowanyMalejacoWspolne.txt":
-			return "Wspolne.txt";
+			return "PosortowanyWspolne.txt";
 		case "JedenElement.txt":
 			return "JedenElement.txt";
 		case "Grzegorz.txt":
 		case "PosortowanyGrzegorz.txt":
 		case "PosortowanyMalejacoGrzegorz.txt":
-			return "Grzegorz.txt";
+			return "PosortowanyGrzegorz.txt";
 		default:
 			return "brakpliku.txt";
 		}
 	}
-
+	
+	private Boolean oczekiwanyWynikBoolean(String file) {
+		switch (file) {
+		case "PosortowanyWspolne.txt":
+		case "PosortowanyMarcin.txt":
+		case "PosortowanyGrzegorz.txt":
+		case "JedenElement.txt":
+			return true;
+		default:
+			return false;
+		}
+	}
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
@@ -176,20 +186,34 @@ class ArrayExamplesTest extends ArrayExamples {
 	void testBubblesort(String file) {
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = read(file);	
-		String niezmieniona = oczekiwanyWynikString(file);
-		int [] testowaTablicaNieZmieniona = read(file);	
+		String PosortowanaGotowa = oczekiwanyWynikString(file);
+		int [] testowaTablicaPosortowana = read(PosortowanaGotowa);	
 		test.bubblesort(testowaTablica);
-		assertEquals(testowaTablica, testowaTablicaNieZmieniona);
+		assertEquals(testowaTablica, testowaTablicaPosortowana);
 	}
 
-	@Test
-	void testShowList() {
-		fail("Not yet implemented");
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
+			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
+			"ZeroElement.txt","JedenElement.txt"})
+	void testShowList(String file) {
+		ArrayExamples test = new ArrayExamples();
+//		int [] testowaTablica = read(file);	
+		int [] testowaTablica = new ReadArrayFromFile(file).read(maxArrayCount);	
+		test.showList(testowaTablica);
 	}
 
-	@Test
-	void testIsAscending() {
-		fail("Not yet implemented");
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
+			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
+			"ZeroElement.txt","JedenElement.txt"})
+	void testIsAscending(String file) {
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).read(maxArrayCount);
+		Boolean actual = test.isAscending(testowaTablica);
+		Boolean expected = oczekiwanyWynikBoolean(file);
+		assertEquals(expected, actual);
+		
 	}
 
 }

@@ -11,13 +11,13 @@ public class ReadArrayFromFile {
 		this.fileName = fileName;
 	}
 
-	public int [] read() {
+
+	public int [] read(int maxArrayCount) {
 		String path = "./resources/";
+		File pliczek = new File(path + fileName);
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(path + fileName));
 			String line = reader.readLine();
-			int [] tab;
-			
 			
 			int countOfNumbers = 1;
 			
@@ -27,22 +27,46 @@ public class ReadArrayFromFile {
 				countOfNumbers++;
 			}
 			reader.close();
-			reader = new BufferedReader(new FileReader(path + fileName));
-			tab = new int[countOfNumbers];
-			int i =0;
-			while (line != null) {
-				line = reader.readLine();
-				tab[i] = Integer.parseInt(reader.readLine());
-				if(line == null)break;
-				countOfNumbers++;
-			}
-			reader.close();
 			
-			return tab;
+			System.out.println("Dlugosc pliku: " + countOfNumbers +"\nDlugosc arrayMax: " + maxArrayCount);
+			
+			if (countOfNumbers < maxArrayCount) {
+				reader = new BufferedReader(new FileReader(path + fileName));
+				int tab [] = new int[countOfNumbers];
+				line = reader.readLine();
+				tab[0]= Integer.parseInt(line);
+				int i =1;
+				
+				while (line != null) {
+					line = reader.readLine();
+					if(line == null)break;
+					tab[i] = Integer.parseInt(line);
+					i++;
+				}
+				reader.close();
+				System.out.println("Dlugosc tablicy zwracanej przy pliku mniejszym niz maks: " + tab.length);
+				return tab;
+			} else {
+				reader = new BufferedReader(new FileReader(path + fileName));
+				int tab [] = new int[maxArrayCount];
+				line = reader.readLine();
+				tab[0]= Integer.parseInt(line);
+				int i =1;
+				
+				while (i < maxArrayCount) {
+					line = reader.readLine();
+					tab[i] = Integer.parseInt(line);
+					i++;
+				}
+				reader.close();
+				System.out.println("Dlugosc tablicy zwracanej przy pliku wiekszym niz maks: " + tab.length);
+				return tab;
+			}
+			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		
 	}
 }
