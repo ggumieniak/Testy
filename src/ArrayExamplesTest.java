@@ -35,66 +35,6 @@ class ArrayExamplesTest extends ArrayExamples {
 	
 	}
 
-
-	
-	private int [] read(String fileName) {
-		String path = "./resources/";
-		File pliczek = new File(path + fileName);
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(path + fileName));
-			String line = reader.readLine();
-			
-			int countOfNumbers = 1;
-			
-			while (line != null) {
-				line = reader.readLine();
-				if(line == null)break;
-				countOfNumbers++;
-			}
-			reader.close();
-			
-			System.out.println("Dlugosc pliku: " + countOfNumbers +"\nDlugosc arrayMax: " + maxArrayCount);
-			
-			if (countOfNumbers < maxArrayCount) {
-				reader = new BufferedReader(new FileReader(path + fileName));
-				int tab [] = new int[countOfNumbers];
-				line = reader.readLine();
-				tab[0]= Integer.parseInt(line);
-				int i =1;
-				
-				while (line != null) {
-					line = reader.readLine();
-					if(line == null)break;
-					tab[i] = Integer.parseInt(line);
-					i++;
-				}
-				reader.close();
-				System.out.println("Dlugosc tablicy zwracanej przy pliku mniejszym niz maks: " + tab.length);
-				return tab;
-			} else {
-				reader = new BufferedReader(new FileReader(path + fileName));
-				int tab [] = new int[maxArrayCount];
-				line = reader.readLine();
-				tab[0]= Integer.parseInt(line);
-				int i =1;
-				
-				while (i < maxArrayCount) {
-					line = reader.readLine();
-					tab[i] = Integer.parseInt(line);
-					i++;
-				}
-				reader.close();
-				System.out.println("Dlugosc tablicy zwracanej przy pliku wiekszym niz maks: " + tab.length);
-				return tab;
-			}
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	private int oczekiwanyWynikInt(String file) {
 		switch (file) {
 		case "Marcin.txt":
@@ -111,6 +51,8 @@ class ArrayExamplesTest extends ArrayExamples {
 		case "PosortowanyGrzegorz.txt":
 		case "PosortowanyMalejacoGrzegorz.txt":
 			return -2147480970;
+		case "Jeden.txt":
+			return 1;
 		default:
 			return 0;
 		}
@@ -132,6 +74,8 @@ class ArrayExamplesTest extends ArrayExamples {
 		case "PosortowanyGrzegorz.txt":
 		case "PosortowanyMalejacoGrzegorz.txt":
 			return "PosortowanyGrzegorz.txt";
+		case "Jeden.txt":
+			return "Jeden.txt";
 		default:
 			return "brakpliku.txt";
 		}
@@ -143,6 +87,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		case "PosortowanyMarcin.txt":
 		case "PosortowanyGrzegorz.txt":
 		case "JedenElement.txt":
+		case "Jeden.txt":
 			return true;
 		default:
 			return false;
@@ -152,13 +97,13 @@ class ArrayExamplesTest extends ArrayExamples {
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt"})
-	void testFindMin(String plik) {
+			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
+	void testFindMin(String file) {
 		ArrayExamples test = new ArrayExamples();
-		int [] testowaTablica = read(plik);	
-		System.out.print("Dlugosc tablicy testowanej: " + testowaTablica.length);
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		System.out.println("Dlugosc tablicy testowanej: " + testowaTablica.length);
 		int wynikIndex = test.findMin(testowaTablica);
-		int oczekiwana = oczekiwanyWynikInt(plik); 
+		int oczekiwana = oczekiwanyWynikInt(file); 
 		int wynik = testowaTablica[wynikIndex];
 		assertEquals(oczekiwana, wynik);
 		
@@ -182,12 +127,12 @@ class ArrayExamplesTest extends ArrayExamples {
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt"})
+			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testBubblesort(String file) {
 		ArrayExamples test = new ArrayExamples();
-		int [] testowaTablica = read(file);	
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
 		String PosortowanaGotowa = oczekiwanyWynikString(file);
-		int [] testowaTablicaPosortowana = read(PosortowanaGotowa);	
+		int [] testowaTablicaPosortowana = new ReadArrayFromFile(PosortowanaGotowa).readAndLimitMaxSizeBy(maxArrayCount);	
 		test.bubblesort(testowaTablica);
 		assertEquals(testowaTablica, testowaTablicaPosortowana);
 	}
@@ -195,22 +140,26 @@ class ArrayExamplesTest extends ArrayExamples {
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt"})
+			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testShowList(String file) {
 		ArrayExamples test = new ArrayExamples();
-//		int [] testowaTablica = read(file);	
-		int [] testowaTablica = new ReadArrayFromFile(file).read(maxArrayCount);	
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);	
 		test.showList(testowaTablica);
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt"})
+			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testIsAscending(String file) {
 		ArrayExamples test = new ArrayExamples();
-		int [] testowaTablica = new ReadArrayFromFile(file).read(maxArrayCount);
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
 		Boolean actual = test.isAscending(testowaTablica);
+		if (actual) {
+			System.out.println("Tablica w " + file + " jest rosnaca");
+		} else {
+			System.out.println("Tablica w " + file + " nie jest uporzadkowana");
+		}
 		Boolean expected = oczekiwanyWynikBoolean(file);
 		assertEquals(expected, actual);
 		

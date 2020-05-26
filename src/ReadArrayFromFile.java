@@ -7,12 +7,13 @@ public class ReadArrayFromFile {
 	String fileName;
 	
 	
+	
 	public ReadArrayFromFile(String fileName) {
 		this.fileName = fileName;
 	}
 
 
-	public int [] read(int maxArrayCount) {
+	public int [] readAndLimitMaxSizeBy(int maxArrayCount) {
 		String path = "./resources/";
 		File pliczek = new File(path + fileName);
 		try {
