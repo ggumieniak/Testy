@@ -96,7 +96,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		}
 	}
 	
-	private int oczekiwanyWynik(String file) {
+	private int oczekiwanyWynikInt(String file) {
 		switch (file) {
 		case "Marcin.txt":
 		case "PosortowanyMarcin.txt":
@@ -116,21 +116,40 @@ class ArrayExamplesTest extends ArrayExamples {
 			return 0;
 		}
 	}
-
+	
+	private String oczekiwanyWynikString(String file) {
+		switch (file) {
+		case "Marcin.txt":
+		case "PosortowanyMarcin.txt":
+		case "PosortowanyMalejacoMarcin.txt":
+			return "Marcin.txt";
+		case "Wspolne.txt":
+		case "PosortowanyWspolne.txt":
+		case "PosortowanyMalejacoWspolne.txt":
+			return "Wspolne.txt";
+		case "JedenElement.txt":
+			return "JedenElement.txt";
+		case "Grzegorz.txt":
+		case "PosortowanyGrzegorz.txt":
+		case "PosortowanyMalejacoGrzegorz.txt":
+			return "Grzegorz.txt";
+		default:
+			return "brakpliku.txt";
+		}
+	}
 
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","jedenElement.txt"})
+			"ZeroElement.txt","JedenElement.txt"})
 	void testFindMin(String plik) {
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = read(plik);	
 		System.out.print("Dlugosc tablicy testowanej: " + testowaTablica.length);
 		int wynikIndex = test.findMin(testowaTablica);
-		int oczekiwana = oczekiwanyWynik(plik); 
+		int oczekiwana = oczekiwanyWynikInt(plik); 
 		int wynik = testowaTablica[wynikIndex];
-		if (plik != "zeroElement.txt")
 		assertEquals(oczekiwana, wynik);
 		
 	}
@@ -153,10 +172,11 @@ class ArrayExamplesTest extends ArrayExamples {
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","jedenElement.txt"})
+			"ZeroElement.txt","JedenElement.txt"})
 	void testBubblesort(String file) {
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = read(file);	
+		String niezmieniona = oczekiwanyWynikString(file);
 		int [] testowaTablicaNieZmieniona = read(file);	
 		test.bubblesort(testowaTablica);
 		assertEquals(testowaTablica, testowaTablicaNieZmieniona);
