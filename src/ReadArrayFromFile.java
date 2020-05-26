@@ -19,6 +19,9 @@ public class ReadArrayFromFile {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(path + fileName));
 			String line = reader.readLine();
+			if (line == null) {
+				return new int[0];
+			}
 			
 			int countOfNumbers = 1;
 			
@@ -29,7 +32,7 @@ public class ReadArrayFromFile {
 			}
 			reader.close();
 			
-			System.out.println("Dlugosc pliku: " + countOfNumbers +"\nDlugosc arrayMax: " + maxArrayCount);
+//			System.out.println("Dlugosc pliku: " + countOfNumbers +"\nDlugosc arrayMax: " + maxArrayCount);
 			
 			if (countOfNumbers < maxArrayCount) {
 				reader = new BufferedReader(new FileReader(path + fileName));
@@ -45,7 +48,7 @@ public class ReadArrayFromFile {
 					i++;
 				}
 				reader.close();
-				System.out.println("Dlugosc tablicy zwracanej przy pliku mniejszym niz maks: " + tab.length);
+//				System.out.println("Dlugosc tablicy zwracanej przy pliku mniejszym niz maks: " + tab.length);
 				return tab;
 			} else {
 				reader = new BufferedReader(new FileReader(path + fileName));
@@ -60,7 +63,7 @@ public class ReadArrayFromFile {
 					i++;
 				}
 				reader.close();
-				System.out.println("Dlugosc tablicy zwracanej przy pliku wiekszym niz maks: " + tab.length);
+//				System.out.println("Dlugosc tablicy zwracanej przy pliku wiekszym niz maks: " + tab.length);
 				return tab;
 			}
 			

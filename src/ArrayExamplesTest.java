@@ -13,7 +13,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 class ArrayExamplesTest extends ArrayExamples {
 	
 	private static int maxArrayCount;
-	
+	final int testSizeZero = 0;
+	final int testSizeTen = 10;
+	final int testSizeIntegerMax = Integer.MAX_VALUE;
+	final int testSizeMinusFive = -5;
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -99,9 +102,9 @@ class ArrayExamplesTest extends ArrayExamples {
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
 			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testFindMin(String file) {
+		System.out.println("testFindMin dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
-		System.out.println("Dlugosc tablicy testowanej: " + testowaTablica.length);
 		int wynikIndex = test.findMin(testowaTablica);
 		int oczekiwana = oczekiwanyWynikInt(file); 
 		int wynik = testowaTablica[wynikIndex];
@@ -109,18 +112,123 @@ class ArrayExamplesTest extends ArrayExamples {
 		
 	}
 
-	@Test
-	void testBadResize() {
-		fail("Not yet implemented");
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testBadResizeForArgumentEqualsZero(String file) {
+		System.out.println("testBadResizeForArgumentEqualsZero dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		test.badResize(testowaTablica, testSizeZero);
+		int actual = testowaTablica.length;
+		int expected = testSizeZero;
+		assertEquals(expected, actual);
+	}
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testBadResizeForArgumentEqualsTen(String file) {
+		System.out.println("testBadResizeForArgumentEqualsTen dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		test.badResize(testowaTablica, testSizeTen);
+		int actual = testowaTablica.length;
+		int expected = testSizeTen;
+		assertEquals(expected, actual);
+	}
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testBadResizeForArgumentEqualsIntegerMax(String file) {
+		System.out.println("testBadResizeForArgumentEqualsIntegerMax dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		try {
+			test.badResize(testowaTablica, testSizeIntegerMax);
+		} catch (OutOfMemoryError e) {
+			System.err.print("Za duza tablica.");
+		}
+		
+		int actual = testowaTablica.length;
+		int expected = testSizeIntegerMax;
+		assertEquals(expected, actual);
+	}
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testBadResizeForArgumentEqualsMinusFive(String file) {
+		System.out.println("testBadResizeForArgumentEqualsMinusFive dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		try {
+			test.badResize(testowaTablica, testSizeMinusFive);
+		} catch (NegativeArraySizeException e) {
+			System.err.println("Uzytkownik podal ujemna wartosc jako nowy rozmiar tablicy");
+		}
+		
+		int actual = testowaTablica.length;
+		int expected = testSizeMinusFive;
+		assertEquals(expected, actual);
 	}
 
-	@Test
-	void testGoodResize() {
-		fail("Not yet implemented");
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testGoodResizeEqualsZero(String file) {
+		System.out.println("testGoodResizeEqualsZero dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeZero);
+		int actual = zwroconaTablica.length;
+		int expected = testSizeZero;
+		assertEquals(expected, actual);
+	}
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testGoodResizeEqualsTen(String file) {
+		System.out.println("testGoodResizeEqualsTen dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeTen);
+		int actual = zwroconaTablica.length;
+		int expected = testSizeTen;
+		assertEquals(expected, actual);
+	}
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testGoodResizeEqualsIntegerMax(String file) {
+		System.out.println("testGoodResizeEqualsIntegerMax dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		int actual;
+		try
+		{
+		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeIntegerMax);
+		actual = zwroconaTablica.length;
+		} catch (OutOfMemoryError e) {
+			System.err.print("Za duza tablica.");
+			actual = 0;
+		}
+		int expected = testSizeIntegerMax;
+		assertEquals(expected, actual);
+	}
+	@ParameterizedTest
+	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	void testGoodResizeEqualsMinusFive(String file) {
+		System.out.println("testGoodResizeEqualsMinusFive dla " + file);
+		ArrayExamples test = new ArrayExamples();
+		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
+		int actual;
+		try
+		{
+		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeMinusFive);
+		actual = zwroconaTablica.length;
+		} catch (NegativeArraySizeException e) {
+			System.err.print("Uzytkownik podal liczbe ujemna jako nowy rozmiar tablicy.");
+			actual = 0;
+		}
+		int expected = testSizeMinusFive;
+		assertEquals(expected, actual);
 	}
 
 	@Test
 	void testFindAndPrintPairs() {
+		System.out.println("testFindAndPrintPairs dla ");
 		fail("Not yet implemented");
 	}
 
@@ -129,6 +237,7 @@ class ArrayExamplesTest extends ArrayExamples {
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
 			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testBubblesort(String file) {
+		System.out.println("testBubblesort dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
 		String PosortowanaGotowa = oczekiwanyWynikString(file);
@@ -142,6 +251,7 @@ class ArrayExamplesTest extends ArrayExamples {
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
 			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testShowList(String file) {
+		System.out.println("testShowList dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);	
 		test.showList(testowaTablica);
@@ -152,6 +262,7 @@ class ArrayExamplesTest extends ArrayExamples {
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
 			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
 	void testIsAscending(String file) {
+		System.out.println("testIsAscending dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
 		Boolean actual = test.isAscending(testowaTablica);
