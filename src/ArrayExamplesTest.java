@@ -18,8 +18,10 @@ class ArrayExamplesTest extends ArrayExamples {
 	final int testSizeIntegerMax = Integer.MAX_VALUE;
 	final int testSizeMinusFive = -5;
 	
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+	
+	
+	@BeforeAll										// mozna zakomentowac i wpisac w atrybucie maxArrayCount na sztywno maksymalna dlugosc tablicy
+	static void setUpBeforeClass() throws Exception { // czy te funkcje wykonujemy za kazdym razem?	
 		 // metoda zostala uzyta tylko raz, aby sprawdzic limity		
 		System.out.println("Konfigurowanie testu");
 		int i = 1;
@@ -143,7 +145,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		try {
 			test.badResize(testowaTablica, testSizeIntegerMax);
 		} catch (OutOfMemoryError e) {
-			System.err.print("Za duza tablica.");
+			System.err.println("Za duza tablica.");
 		}
 		
 		int actual = testowaTablica.length;
@@ -201,7 +203,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeIntegerMax);
 		actual = zwroconaTablica.length;
 		} catch (OutOfMemoryError e) {
-			System.err.print("Za duza tablica.");
+			System.err.println("Za duza tablica.");
 			actual = 0;
 		}
 		int expected = testSizeIntegerMax;
@@ -219,7 +221,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeMinusFive);
 		actual = zwroconaTablica.length;
 		} catch (NegativeArraySizeException e) {
-			System.err.print("Uzytkownik podal liczbe ujemna jako nowy rozmiar tablicy.");
+			System.err.println("Uzytkownik podal liczbe ujemna jako nowy rozmiar tablicy.");
 			actual = 0;
 		}
 		int expected = testSizeMinusFive;
