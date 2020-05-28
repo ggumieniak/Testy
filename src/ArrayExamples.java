@@ -109,8 +109,9 @@ public class ArrayExamples
 		for(int i = 0; i < list.length && changed; i++)
 		{	changed = false;
 			for(int j = 0; j < list.length - i - 1; j++)
-			{	assert (j > 0) && (j + 1 < list.length) : "loop counter j " + j +
-					"is out of bounds.";
+			{	
+//				assert (j > 0) && (j + 1 < list.length) : "loop counter j " + j +
+//					"is out of bounds.";
 				if(list[j] > list[j+1])
 				{	changed = true;
 					temp = list[j + 1];

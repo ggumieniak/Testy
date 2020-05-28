@@ -11,35 +11,50 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class ArrayExamplesTest extends ArrayExamples {
-	
+
 	private static int maxArrayCount;
 	final int testSizeZero = 0;
 	final int testSizeTen = 10;
 	final int testSizeIntegerMax = Integer.MAX_VALUE;
 	final int testSizeMinusFive = -5;
-	
-	
-	
-	@BeforeAll										// mozna zakomentowac i wpisac w atrybucie maxArrayCount na sztywno maksymalna dlugosc tablicy
-	static void setUpBeforeClass() throws Exception { // czy te funkcje wykonujemy za kazdym razem?	
-		 // metoda zostala uzyta tylko raz, aby sprawdzic limity		
-		System.out.println("Konfigurowanie testu");
-		int i = 1;
-		try {
-			while(true) {
-				int [] array = new int[i];
-				i+=1;
-				array = null;
-			}
-		} catch (OutOfMemoryError e ) {
-			i-=1;
-			maxArrayCount = i;
-			
-			System.out.println("Maksymalna dlugosc to " + (i));
-		}
-	
-	}
 
+
+
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
+		// metoda zostala uzyta tylko raz, aby sprawdzic limity
+		System.out.println("Konfigurowanie testu");
+		int max_size = 0;
+		int i = 1;
+		while(true)
+		{
+			try {
+				while(true) {
+					max_size += i;
+					System.out.print("Próba dla: " + (max_size));
+					int [] array = new int[max_size];
+					System.out.println(" - UDANA.");
+					i*=2;
+					array = null;
+				}
+			} catch (OutOfMemoryError e ) {
+				if(i == 1 ){
+					System.out.println(" - NIE UDANA.");
+					max_size -= i;
+					i=0;
+					System.out.println("Maksymalna dlugosc to " + (max_size));
+					maxArrayCount = max_size;
+				}
+				else{
+					System.out.println(" - NIE UDANA.");
+					max_size -= i;
+					i=1;
+				}
+			}
+
+			if(i==0) break;
+		}
+	}
 	private int oczekiwanyWynikInt(String file) {
 		switch (file) {
 		case "Marcin.txt":
@@ -62,7 +77,7 @@ class ArrayExamplesTest extends ArrayExamples {
 			return 0;
 		}
 	}
-	
+
 	private String oczekiwanyWynikString(String file) {
 		switch (file) {
 		case "Marcin.txt":
@@ -85,7 +100,7 @@ class ArrayExamplesTest extends ArrayExamples {
 			return "brakpliku.txt";
 		}
 	}
-	
+
 	private Boolean oczekiwanyWynikBoolean(String file) {
 		switch (file) {
 		case "PosortowanyWspolne.txt":
@@ -98,7 +113,7 @@ class ArrayExamplesTest extends ArrayExamples {
 			return false;
 		}
 	}
-	
+
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
 			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
@@ -111,7 +126,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		int oczekiwana = oczekiwanyWynikInt(file); 
 		int wynik = testowaTablica[wynikIndex];
 		assertEquals(oczekiwana, wynik);
-		
+
 	}
 
 	@ParameterizedTest
@@ -123,7 +138,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		test.badResize(testowaTablica, testSizeZero);
 		int actual = testowaTablica.length;
 		int expected = testSizeZero;
-		assertEquals(expected, actual);
+		assertNotEquals(expected, actual);
 	}
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
@@ -134,7 +149,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		test.badResize(testowaTablica, testSizeTen);
 		int actual = testowaTablica.length;
 		int expected = testSizeTen;
-		assertEquals(expected, actual);
+		assertNotEquals(expected, actual);
 	}
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
@@ -147,10 +162,10 @@ class ArrayExamplesTest extends ArrayExamples {
 		} catch (OutOfMemoryError e) {
 			System.err.println("Za duza tablica.");
 		}
-		
+
 		int actual = testowaTablica.length;
 		int expected = testSizeIntegerMax;
-		assertEquals(expected, actual);
+		assertNotEquals(expected, actual);
 	}
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
@@ -162,11 +177,12 @@ class ArrayExamplesTest extends ArrayExamples {
 			test.badResize(testowaTablica, testSizeMinusFive);
 		} catch (NegativeArraySizeException e) {
 			System.err.println("Uzytkownik podal ujemna wartosc jako nowy rozmiar tablicy");
+
 		}
-		
+
 		int actual = testowaTablica.length;
 		int expected = testSizeMinusFive;
-		assertEquals(expected, actual);
+		assertNotEquals(expected, actual);
 	}
 
 	@ParameterizedTest
@@ -200,14 +216,14 @@ class ArrayExamplesTest extends ArrayExamples {
 		int actual;
 		try
 		{
-		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeIntegerMax);
-		actual = zwroconaTablica.length;
+			int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeIntegerMax);
+			actual = zwroconaTablica.length;
 		} catch (OutOfMemoryError e) {
 			System.err.println("Za duza tablica.");
 			actual = 0;
 		}
 		int expected = testSizeIntegerMax;
-		assertEquals(expected, actual);
+		assertNotEquals(expected, actual);
 	}
 	@ParameterizedTest
 	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
@@ -218,15 +234,14 @@ class ArrayExamplesTest extends ArrayExamples {
 		int actual;
 		try
 		{
-		int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeMinusFive);
-		actual = zwroconaTablica.length;
+			int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeMinusFive);
+			actual = zwroconaTablica.length;
 		} catch (NegativeArraySizeException e) {
 			System.err.println("Uzytkownik podal liczbe ujemna jako nowy rozmiar tablicy.");
 			actual = 0;
 		}
 		int expected = testSizeMinusFive;
-		assertEquals(expected, actual);
-	}
+		assertNotEquals(expected, actual);		}
 
 	@Test
 	void testFindAndPrintPairs() {
@@ -245,7 +260,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		String PosortowanaGotowa = oczekiwanyWynikString(file);
 		int [] testowaTablicaPosortowana = new ReadArrayFromFile(PosortowanaGotowa).readAndLimitMaxSizeBy(maxArrayCount);	
 		test.bubblesort(testowaTablica);
-		assertEquals(testowaTablica, testowaTablicaPosortowana);
+		assertArrayEquals(testowaTablica, testowaTablicaPosortowana);
 	}
 
 	@ParameterizedTest
@@ -275,7 +290,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		}
 		Boolean expected = oczekiwanyWynikBoolean(file);
 		assertEquals(expected, actual);
-		
+
 	}
 
 }
