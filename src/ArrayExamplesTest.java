@@ -57,20 +57,16 @@ class ArrayExamplesTest extends ArrayExamples {
 	}
 	private int oczekiwanyWynikInt(String file) {
 		switch (file) {
-		case "Marcin.txt":
-		case "PosortowanyMarcin.txt":
-		case "PosortowanyMalejacoMarcin.txt":
-			return -2147476739;
 		case "Wspolne.txt":
 		case "PosortowanyWspolne.txt":
 		case "PosortowanyMalejacoWspolne.txt":
 			return -2147010079;
+		case "Milion.txt":
+		case "PosortowanyMilion.txt":
+		case "PosortowanyMalejacoMilion.txt":
+			return -2147469396;
 		case "JedenElement.txt":
 			return -2147383980;
-		case "Grzegorz.txt":
-		case "PosortowanyGrzegorz.txt":
-		case "PosortowanyMalejacoGrzegorz.txt":
-			return -2147480970;
 		case "Jeden.txt":
 			return 1;
 		default:
@@ -80,20 +76,16 @@ class ArrayExamplesTest extends ArrayExamples {
 
 	private String oczekiwanyWynikString(String file) {
 		switch (file) {
-		case "Marcin.txt":
-		case "PosortowanyMarcin.txt":
-		case "PosortowanyMalejacoMarcin.txt":
-			return "PosortowanyMarcin.txt";
+		case "Milion.txt":
+		case "PosortowanyMilion.txt":
+		case "PosortowanyMalejacoMilion.txt":
+			return "PosortowanyMilion.txt";
 		case "Wspolne.txt":
 		case "PosortowanyWspolne.txt":
 		case "PosortowanyMalejacoWspolne.txt":
 			return "PosortowanyWspolne.txt";
 		case "JedenElement.txt":
 			return "JedenElement.txt";
-		case "Grzegorz.txt":
-		case "PosortowanyGrzegorz.txt":
-		case "PosortowanyMalejacoGrzegorz.txt":
-			return "PosortowanyGrzegorz.txt";
 		case "Jeden.txt":
 			return "Jeden.txt";
 		default:
@@ -104,8 +96,7 @@ class ArrayExamplesTest extends ArrayExamples {
 	private Boolean oczekiwanyWynikBoolean(String file) {
 		switch (file) {
 		case "PosortowanyWspolne.txt":
-		case "PosortowanyMarcin.txt":
-		case "PosortowanyGrzegorz.txt":
+		case "PosortowanyMilion.txt":
 		case "JedenElement.txt":
 		case "Jeden.txt":
 			return true;
@@ -115,9 +106,8 @@ class ArrayExamplesTest extends ArrayExamples {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
-			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
+	@ValueSource(strings = {"Wspolne.txt","PosortowanyWspolne.txt","PosortowanyMalejacoWspolne.txt", "Milion.txt", "PosortowanyMilion.txt", "PosortowanyMalejacoMilion.txt",
+			"JedenElement.txt","Jeden.txt"})
 	void testFindMin(String file) {
 		System.out.println("testFindMin dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -130,7 +120,7 @@ class ArrayExamplesTest extends ArrayExamples {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	@ValueSource(strings = {"Milion.txt","Wspolne.txt","Jeden.txt"})
 	void testBadResizeForArgumentEqualsZero(String file) {
 		System.out.println("testBadResizeForArgumentEqualsZero dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -141,7 +131,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		assertNotEquals(expected, actual);
 	}
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	@ValueSource(strings = {"Milion.txt","Wspolne.txt","Jeden.txt"})
 	void testBadResizeForArgumentEqualsTen(String file) {
 		System.out.println("testBadResizeForArgumentEqualsTen dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -152,41 +142,18 @@ class ArrayExamplesTest extends ArrayExamples {
 		assertNotEquals(expected, actual);
 	}
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	@ValueSource(strings = {"Milion.txt","Wspolne.txt","Jeden.txt"})
 	void testBadResizeForArgumentEqualsIntegerMax(String file) {
 		System.out.println("testBadResizeForArgumentEqualsIntegerMax dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
-		try {
+		assertThrows(OutOfMemoryError.class, () -> {
 			test.badResize(testowaTablica, testSizeIntegerMax);
-		} catch (OutOfMemoryError e) {
-			System.err.println("Za duza tablica.");
-		}
-
-		int actual = testowaTablica.length;
-		int expected = testSizeIntegerMax;
-		assertNotEquals(expected, actual);
-	}
-	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
-	void testBadResizeForArgumentEqualsMinusFive(String file) {
-		System.out.println("testBadResizeForArgumentEqualsMinusFive dla " + file);
-		ArrayExamples test = new ArrayExamples();
-		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
-		try {
-			test.badResize(testowaTablica, testSizeMinusFive);
-		} catch (NegativeArraySizeException e) {
-			System.err.println("Uzytkownik podal ujemna wartosc jako nowy rozmiar tablicy");
-
-		}
-
-		int actual = testowaTablica.length;
-		int expected = testSizeMinusFive;
-		assertNotEquals(expected, actual);
+		});
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	@ValueSource(strings = {"Milion.txt","Wspolne.txt","Jeden.txt"})
 	void testGoodResizeEqualsZero(String file) {
 		System.out.println("testGoodResizeEqualsZero dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -197,7 +164,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		assertEquals(expected, actual);
 	}
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	@ValueSource(strings = {"Milion.txt","Wspolne.txt","Jeden.txt"})
 	void testGoodResizeEqualsTen(String file) {
 		System.out.println("testGoodResizeEqualsTen dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -208,51 +175,29 @@ class ArrayExamplesTest extends ArrayExamples {
 		assertEquals(expected, actual);
 	}
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
+	@ValueSource(strings = {"Milion.txt","Wspolne.txt","Jeden.txt"})
 	void testGoodResizeEqualsIntegerMax(String file) {
 		System.out.println("testGoodResizeEqualsIntegerMax dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
-		int actual;
-		try
-		{
+		assertThrows(OutOfMemoryError.class, () -> {
 			int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeIntegerMax);
-			actual = zwroconaTablica.length;
-		} catch (OutOfMemoryError e) {
-			System.err.println("Za duza tablica.");
-			actual = 0;
-		}
-		int expected = testSizeIntegerMax;
-		assertNotEquals(expected, actual);
+		});
 	}
+
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","Jeden.txt","ZeroElement.txt"})
-	void testGoodResizeEqualsMinusFive(String file) {
-		System.out.println("testGoodResizeEqualsMinusFive dla " + file);
+	@ValueSource(strings = {"Wspolne.txt","PosortowanyWspolne.txt","PosortowanyMalejacoWspolne.txt", "Milion.txt", "PosortowanyMilion.txt", "PosortowanyMalejacoMilion.txt",
+			"JedenElement.txt","Jeden.txt"})
+	void testFindAndPrintPairs(String file) {
+		System.out.println("testFindAndPrintPairs dla " + file);
 		ArrayExamples test = new ArrayExamples();
 		int [] testowaTablica = new ReadArrayFromFile(file).readAndLimitMaxSizeBy(maxArrayCount);
-		int actual;
-		try
-		{
-			int [] zwroconaTablica = test.goodResize(testowaTablica, testSizeMinusFive);
-			actual = zwroconaTablica.length;
-		} catch (NegativeArraySizeException e) {
-			System.err.println("Uzytkownik podal liczbe ujemna jako nowy rozmiar tablicy.");
-			actual = 0;
-		}
-		int expected = testSizeMinusFive;
-		assertNotEquals(expected, actual);		}
-
-	@Test
-	void testFindAndPrintPairs() {
-		System.out.println("testFindAndPrintPairs dla ");
-		fail("Not yet implemented");
+		test.findAndPrintPairs(testowaTablica, 10000);
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
-			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
+	@ValueSource(strings = {"Wspolne.txt","PosortowanyWspolne.txt","PosortowanyMalejacoWspolne.txt", "Milion.txt", "PosortowanyMilion.txt", "PosortowanyMalejacoMilion.txt",
+			"JedenElement.txt","Jeden.txt"})
 	void testBubblesort(String file) {
 		System.out.println("testBubblesort dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -264,9 +209,8 @@ class ArrayExamplesTest extends ArrayExamples {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
-			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
+	@ValueSource(strings = {"Wspolne.txt","PosortowanyWspolne.txt","PosortowanyMalejacoWspolne.txt", "Milion.txt", "PosortowanyMilion.txt", "PosortowanyMalejacoMilion.txt",
+			"JedenElement.txt","Jeden.txt"})
 	void testShowList(String file) {
 		System.out.println("testShowList dla " + file);
 		ArrayExamples test = new ArrayExamples();
@@ -275,9 +219,8 @@ class ArrayExamplesTest extends ArrayExamples {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Grzegorz.txt","Marcin.txt","Wspolne.txt","PosortowanyGrzegorz.txt","PosortowanyMarcin.txt"
-			,"PosortowanyWspolne.txt","PosortowanyMalejacoGrzegorz.txt","PosortowanyMalejacoMarcin.txt", "PosortowanyMalejacoWspolne.txt",
-			"ZeroElement.txt","JedenElement.txt","Jeden.txt"})
+	@ValueSource(strings = {"Wspolne.txt","PosortowanyWspolne.txt","PosortowanyMalejacoWspolne.txt", "Milion.txt", "PosortowanyMilion.txt", "PosortowanyMalejacoMilion.txt",
+			"JedenElement.txt","Jeden.txt"})
 	void testIsAscending(String file) {
 		System.out.println("testIsAscending dla " + file);
 		ArrayExamples test = new ArrayExamples();
