@@ -25,7 +25,7 @@ class ArrayExamplesTest extends ArrayExamples {
 		// metoda zostala uzyta tylko raz, aby sprawdzic limity
 		System.out.println("Konfigurowanie testu");
 		int max_size = 0;
-		int i = 1;
+		int i = 1;		
 		while(true)
 		{
 			try {
@@ -54,6 +54,7 @@ class ArrayExamplesTest extends ArrayExamples {
 
 			if(i==0) break;
 		}
+		
 	}
 	private int oczekiwanyWynikInt(String file) {
 		switch (file) {

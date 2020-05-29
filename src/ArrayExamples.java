@@ -111,7 +111,7 @@ public class ArrayExamples
 			for(int j = 0; j < list.length - i - 1; j++)
 			{	
 //				assert (j > 0) && (j + 1 < list.length) : "loop counter j " + j +
-//					"is out of bounds.";
+//					"is out of bounds.";		Asercja zostala usunieta, poniewaz powodowała problemy z uruchomieniem algorytmu i nigdy się nie wykonywał
 				if(list[j] > list[j+1])
 				{	changed = true;
 					temp = list[j + 1];
